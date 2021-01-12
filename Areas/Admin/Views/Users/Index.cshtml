@@ -1,0 +1,171 @@
+﻿@model DoAnASP1.Areas.Admin.Models.User
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#AddUser">Thêm mới</button>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.UserName)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.PassWord)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TrangThai)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in ViewBag.DSUsers) {
+        <tr>
+            <td>
+                @item.UserName
+            </td>
+            <td>
+                @item.PassWord
+            </td>
+            <td>
+                @item.TrangThai
+            </td>
+            <td>
+                <button type="button" class="btn btn-primary" data-userid="@item.UserId" data-toggle="modal" name="btn_edit_user" data-target="#EditUser">Edit</button>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+@section Scripts{
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    <script>
+
+        function addUser() {
+            var insert = {};
+            insert.UserName = $("#UserName").val();
+            insert.PassWord = $("#PassWord").val();
+            insert.TrangThai = $("#TrangThai").val();
+            console.log(insert);
+            $.ajax({
+                url: "../../API/UsersApi/PostUser",
+                type: "POST",
+                contentType: "Application/json;charset-utf-8",
+                data: JSON.stringify(insert),
+                dataType: "json"
+            }).done(function (reponse) {
+                alert('Thêm vào thành công!');
+                location.reload();
+            }).fail(function () {
+                alert('Thất bại !');
+            });
+        }
+        function getUser(id) {
+            $.ajax({
+                url: "../../API/UsersApi/GetUser/" + id,
+                type: "GET",
+                contentType: "Application/json;charset-utf-8",
+                dataType: "json"
+            }).done(function (reponse) {
+                console.log(reponse);
+                $("#edit_id").val(reponse.userId);
+                $("#edit_username").val(reponse.userName);
+                $("#edit_password").val(reponse.passWord);
+                $("#edit_trangthai").val(reponse.trangThai);
+            }).fail(function () {
+                alert('Thất bại !');
+            });
+        }
+        $(document).ready(function () {
+            $('button[name=btn_create_user]').click(function (e) {
+                addUser();
+                e.preventDefault;
+            });
+            $('button[name=btn_edit_user]').click(function (e) {
+                var id = $(this).data("userid");
+                console.log(id);
+                getUser(id);
+                e.preventDefault;
+            });
+        });
+    </script>
+}
+<div class="modal fade" id="EditUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Sửa User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <input type="hidden" id="edit_id" asp-for="UserId" />
+                    <div class="form-group">
+                        <label asp-for="UserName" class="control-label"></label>
+                        <input asp-for="UserName" id="edit_username" class="form-control" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PassWord" class="control-label"></label>
+                        <input asp-for="PassWord" id="edit_password" class="form-control" />
+                        <span asp-validation-for="PassWord" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="TrangThai" class="control-label"></label>
+                        <input asp-for="TrangThai" id="edit_trangthai" class="form-control" />
+                        <span asp-validation-for="TrangThai" class="text-danger"></span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" name="btn_update_user" class="btn btn-primary">Cập Nhật</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="AddUser" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Thêm User</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <form>
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                    <div class="form-group">
+                        <label asp-for="UserName" class="control-label"></label>
+                        <input asp-for="UserName" id="UserName" class="form-control" />
+                        <span asp-validation-for="UserName" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="PassWord" class="control-label"></label>
+                        <input asp-for="PassWord" id="PassWord" class="form-control" />
+                        <span asp-validation-for="PassWord" class="text-danger"></span>
+                    </div>
+                    <div class="form-group">
+                        <label asp-for="TrangThai" class="control-label"></label>
+                        <input asp-for="TrangThai" id="TrangThai" class="form-control" />
+                        <span asp-validation-for="TrangThai" class="text-danger"></span>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                <button type="button" name="btn_create_user" class="btn btn-primary">Thêm Mới</button>
+            </div>
+        </div>
+    </div>
+</div>

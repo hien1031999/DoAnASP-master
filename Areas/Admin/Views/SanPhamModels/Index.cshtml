@@ -1,0 +1,71 @@
+﻿@model DoAnASP1.Areas.Admin.Models.SanPhamModels
+
+@{ ViewData["Title"] = "Index"; }
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a> 
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.TenSP)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NgaySX)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Hinh)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.MoTa)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Gia)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TrangThai)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.LoaiSP)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in ViewBag.DSSanPham)
+        {
+<tr>
+    <td>
+        @item.TenSP
+    </td>
+    <td>
+        @item.NgaySX
+    </td>
+    <td>
+        @item.Hinh
+    </td>
+    <td>
+        @item.MoTa
+    </td>
+    <td>
+        @item.Gia
+    </td>
+    <td>
+        @item.TrangThai
+    </td>
+    <td>
+        @item.MaLoai
+    </td>
+    <td>
+        <button type="button" class="btn btn-primary" name="btn_edit_sp" id-idsp="@item.MaSP" data-toggle="modal" data-target="#SuaSP">Sửa</button>
+        <button type="button" class="btn btn-primary" name="btn_delete_sp" id-idsp="@item.MaSP" data-toggle="modal">Xóa</button>
+    </td>
+</tr>}
+    </tbody>
+</table>
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
